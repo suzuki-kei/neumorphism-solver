@@ -1,4 +1,3 @@
-require 'constants'
 require 'field_text_parser'
 
 class Field
@@ -9,12 +8,8 @@ class Field
     TOGGLE_5 = :toggle_5
     TOGGLE_9 = :toggle_9
 
-    def self.name_to_file_path(name)
-        DATA_DIR.join("#{name}.txt")
-    end
-
-    def self.from_file(name)
-        self.new(File.read(name_to_file_path(name)))
+    def self.from_file(file_path)
+        self.new(File.read(file_path))
     end
 
     def initialize(text)
@@ -55,7 +50,7 @@ class Field
         end
     end
 
-    def touch(x, y, toggle_method)
+    def touch(toggle_method, x, y)
         case toggle_method
             when TOGGLE_5
                 toggle(x, y)
