@@ -1,7 +1,7 @@
 
 class Solver
 
-    def solve(field, max_depth=4, depth=1, operations=[])
+    def solve(field, max_depth, depth=1, operations=[])
         if field.solved?
             return operations.dup
         end

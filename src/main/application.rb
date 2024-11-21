@@ -21,14 +21,14 @@ class Application
         end
 
         field = Field.from_file(problem_file_path)
-        operations = Solver.new.solve(field)
 
-        if operations
-            result = operations_to_string(operations)
-            puts result
-            save_cache(problem_file_path, result)
-        else
-            puts 'solve failed.'
+        (1..).each do |max_depth|
+            if operations = Solver.new.solve(field, max_depth)
+                result = operations_to_string(operations)
+                puts result
+                save_cache(problem_file_path, result)
+                return
+            end
         end
     end
 
