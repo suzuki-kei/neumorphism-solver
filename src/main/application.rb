@@ -53,7 +53,7 @@ class Application
 
     def operations_to_string(operations)
         operations.map do |toggle_method, x, y|
-            "#{toggle_method} (x=#{x}, y=#{y})"
+            "#{toggle_method} (x=#{x + 1}, y=#{y + 1})"
         end.join("\n")
     end
 
