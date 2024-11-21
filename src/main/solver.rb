@@ -15,6 +15,7 @@ class Solver
             operations.push([toggle_method, x, y])
             field.touch(toggle_method, x, y)
             if field.solved?
+                field.touch(toggle_method, x, y)
                 return operations.dup
             end
             if (answer = solve(field, max_depth, depth + 1, operations))
