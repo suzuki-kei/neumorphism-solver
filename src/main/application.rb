@@ -24,6 +24,7 @@ class Application
 
         (1..).each do |max_depth|
             if operations = Solver.new.solve(field, max_depth)
+                raise 'Bug' if !solved?(field, operations)
                 result = operations_to_string(operations)
                 puts result
                 save_cache(problem_file_path, result)
@@ -49,6 +50,13 @@ class Application
         File.open(cache_file_path, 'w') do |file|
             file.write(result)
         end
+    end
+
+    def solved?(field, operations)
+        operations.each do |toggle_method, x, y|
+            field.touch(toggle_method, x, y)
+        end
+        field.solved?
     end
 
     def operations_to_string(operations)
