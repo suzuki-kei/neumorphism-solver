@@ -15,11 +15,11 @@ class FieldTextParser
 
     def parse_lines_to_field(lines)
         if lines.empty?
-            raise "Invalid argument: [#{text}]"
+            raise ArgumentError, "lines=#{lines}"
         end
 
-        if lines.any? {|line| line.size == 0 and line.size != lines[0].size}
-            raise "Invalid argument: [#{text}]"
+        if lines.any? {|line| line.size > 0 and line.size != lines[0].size}
+            raise ArgumentError, "lines=#{lines}"
         end
 
         lines.map(&method(:parse_line_to_field_row))
@@ -33,7 +33,7 @@ class FieldTextParser
                 when Field::CELL_OFF
                     Field::CELL_OFF
                 else
-                    raise "Invalid argument: [#{c}]"
+                    raise ArgumentError, "c='#{c}'"
             end
         end
     end

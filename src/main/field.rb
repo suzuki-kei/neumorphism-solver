@@ -16,6 +16,10 @@ class Field
         @field = FieldTextParser.new.parse(text)
     end
 
+    def ==(field)
+        @field == field.instance_variable_get('@field')
+    end
+
     def to_s
         inspect
     end
@@ -69,7 +73,7 @@ class Field
                 toggle(x + 1, y)
                 toggle(x + 1, y + 1)
             else
-                raise "Invalid argument: toggle_method=#{toggle_method}"
+                raise ArgumentError, "toggle_method=#{toggle_method}"
         end
     end
 
