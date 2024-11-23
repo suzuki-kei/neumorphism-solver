@@ -19,7 +19,7 @@ class Solver
                 return operations.dup
             end
             if (answer = solve(field, max_depth, depth + 1, operations))
-                best_answer = [answer, best_answer || answer].min_by(&:size)
+                best_answer = [answer, best_answer].compact.min_by(&:size)
             end
             field.touch(toggle_method, x, y)
             operations.pop
