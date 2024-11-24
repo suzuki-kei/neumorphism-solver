@@ -11,7 +11,7 @@ class Solver
 
         best_answer = nil
 
-        field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
+        Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
             operations.push([toggle_method, x, y])
             field.touch(toggle_method, x, y)
             if field.solved?

@@ -3,6 +3,12 @@ require 'field'
 
 class FieldTestCase < Test::Unit::TestCase
 
+    def test_toggle_methods
+        field = Field.from_text('*')
+        expected = [Field::TOGGLE_5, Field::TOGGLE_9]
+        assert_equal expected, Field.toggle_methods
+    end
+
     [
         <<~'EOS',
             *
@@ -90,12 +96,6 @@ class FieldTestCase < Test::Unit::TestCase
             field = Field.from_text(text)
             assert_equal points, field.points
         end
-    end
-
-    def test_toggle_methods
-        field = Field.from_text('*')
-        expected = [Field::TOGGLE_5, Field::TOGGLE_9]
-        assert_equal expected, field.toggle_methods
     end
 
     [

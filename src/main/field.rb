@@ -7,6 +7,10 @@ class Field
     TOGGLE_5 = :toggle_5
     TOGGLE_9 = :toggle_9
 
+    def self.toggle_methods
+        [TOGGLE_5, TOGGLE_9]
+    end
+
     def self.from_file(file_path)
         from_text(File.read(file_path))
     end
@@ -64,10 +68,6 @@ class Field
         xs = (0 ... width).to_a
         ys = (0 ... height).to_a
         xs.product(ys)
-    end
-
-    def toggle_methods
-        [TOGGLE_5, TOGGLE_9]
     end
 
     def solved?
