@@ -1,17 +1,25 @@
+require 'field_to_operations_cache'
 
 class Solver
 
     def initialize
-        @solved_cache = {}
+        @field_to_operations_cache = FieldToOperationsCache.new
     end
 
     def solve(field)
+        @field_to_operations_cache.generate(field.width, field.height, 4)
+        operations = @field_to_operations_cache[field]
+        return operations unless operations.nil?
+
         operations_queue = []
         operations_queue.push([])
 
         loop do
             operations = operations_queue.shift
-            return operations if solved?(field, operations)
+
+            if solved_operations = execute(field.clone, operations)
+                return solved_operations
+            end
 
             Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
                 operations_queue.push([*operations, [toggle_method, x, y]])
@@ -21,16 +29,17 @@ class Solver
 
     private
 
-    def solved?(field, operations)
-        @solved_cache[field] ||= execute(field, operations).solved?
-    end
-
     def execute(field, operations)
-        field.clone.tap do |field|
-            operations.each do |operation|
-                field.touch(*operation)
+        operations.each.with_index do |operation, index|
+            field.touch(*operation)
+            if trailing_operations = @field_to_operations_cache[field]
+                solved_operations = operations[0..index] + trailing_operations
+                @field_to_operations_cache[field] = solved_operations
+                return solved_operations
             end
         end
+
+        nil
     end
 
 end

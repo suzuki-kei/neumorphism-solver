@@ -19,6 +19,15 @@ class Field
         self.new(text.strip.lines.map(&:strip).map(&:chars))
     end
 
+    def self.from_size(width, height, cell)
+        rows = height.times.map do
+            width.times.map do
+                cell
+            end
+        end
+        self.new(rows)
+    end
+
     def self.validate_rows(rows)
         if rows.empty?
             raise ArgumentError, "rows=#{rows}"
@@ -48,12 +57,20 @@ class Field
         @rows == field.rows
     end
 
+    def eql?(field)
+        self == field
+    end
+
     def to_s
         inspect
     end
 
     def inspect
         @rows.map(&:join).join("\n")
+    end
+
+    def hash
+        @rows.map(&:hash).hash
     end
 
     def clone
