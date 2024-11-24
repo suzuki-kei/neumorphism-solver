@@ -1,4 +1,3 @@
-require 'field_text_parser'
 
 class Field
 
@@ -9,15 +8,40 @@ class Field
     TOGGLE_9 = :toggle_9
 
     def self.from_file(file_path)
-        self.new(File.read(file_path))
+        from_text(File.read(file_path))
     end
 
-    def initialize(text)
-        @field = FieldTextParser.new.parse(text)
+    def self.from_text(text)
+        self.new(text.strip.lines.map(&:strip).map(&:chars))
+    end
+
+    def self.validate_rows(rows)
+        if rows.empty?
+            raise ArgumentError, "rows=#{rows}"
+        end
+
+        if rows.any? {|row| row.size > 0 and row.size != rows[0].size}
+            raise ArgumentError, "rows=#{rows}"
+        end
+
+        rows.each do |row|
+            row.each do |cell|
+                if ![CELL_ON, CELL_OFF].include?(cell)
+                    raise ArgumentError, "cell=#{cell}"
+                end
+            end
+        end
+    end
+
+    attr_reader :rows
+
+    def initialize(rows)
+        self.class.validate_rows(rows)
+        @rows = rows
     end
 
     def ==(field)
-        @field == field.instance_variable_get('@field')
+        @rows == field.rows
     end
 
     def to_s
@@ -25,15 +49,15 @@ class Field
     end
 
     def inspect
-        @field.map(&:join).join("\n")
+        @rows.map(&:join).join("\n")
     end
 
     def width
-        @field[0].size
+        @rows[0].size
     end
 
     def height
-        @field.size
+        @rows.size
     end
 
     def points
@@ -47,7 +71,7 @@ class Field
     end
 
     def solved?
-        @field.all? do |row|
+        @rows.all? do |row|
             row.all? do |cell|
                 cell == CELL_OFF
             end
@@ -89,7 +113,7 @@ class Field
             CELL_OFF => CELL_ON,
         }
         if inside_of_field?(x, y)
-            @field[y][x] = map.fetch(@field[y][x])
+            @rows[y][x] = map.fetch(@rows[y][x])
         end
     end
 
