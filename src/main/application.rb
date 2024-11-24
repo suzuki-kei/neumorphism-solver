@@ -52,7 +52,7 @@ class Application
         cache_file_path = CACHE_DIR.join(problem_file_path.basename)
 
         File.open(cache_file_path, 'w') do |file|
-            file.write(result)
+            file.puts(result)
         end
     end
 
