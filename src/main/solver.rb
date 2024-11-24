@@ -1,6 +1,10 @@
 
 class Solver
 
+    def initialize
+        @solved_cache = {}
+    end
+
     def solve(field)
         operations_queue = []
         operations_queue.push([])
@@ -10,8 +14,7 @@ class Solver
             return operations if solved?(field, operations)
 
             Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
-                operation = [toggle_method, x, y]
-                operations_queue.push([*operations, operation]) if operations_queue.last != operation
+                operations_queue.push([*operations, [toggle_method, x, y]])
             end
         end
     end
@@ -19,11 +22,15 @@ class Solver
     private
 
     def solved?(field, operations)
-        field = field.clone
-        operations.each do |operation|
-            field.touch(*operation)
+        @solved_cache[field] ||= execute(field, operations).solved?
+    end
+
+    def execute(field, operations)
+        field.clone.tap do |field|
+            operations.each do |operation|
+                field.touch(*operation)
+            end
         end
-        field.solved?
     end
 
 end

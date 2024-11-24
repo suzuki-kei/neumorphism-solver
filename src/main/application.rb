@@ -5,6 +5,10 @@ require 'solver'
 
 class Application
 
+    def initialize
+        @solver = Solver.new
+    end
+
     def run
         DATA_DIR.glob('*.txt').each(&method(:solve))
     end
@@ -23,7 +27,7 @@ class Application
         field = Field.from_file(problem_file_path)
 
         (1..).each do |max_depth|
-            if operations = Solver.new.solve(field)
+            if operations = @solver.solve(field)
                 raise 'Bug' if !solved?(field, operations)
                 result = operations_to_string(operations)
                 puts result
