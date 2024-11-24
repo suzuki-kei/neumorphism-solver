@@ -59,6 +59,72 @@ class FieldTestCase < Test::Unit::TestCase
     end
 
     [
+        [true, <<~'EOS', <<~'EOS'],
+            *
+        EOS
+            *
+        EOS
+        [true, <<~'EOS', <<~'EOS'],
+            _
+        EOS
+            _
+        EOS
+        [false, <<~'EOS', <<~'EOS'],
+            *
+        EOS
+            _
+        EOS
+        [false, <<~'EOS', <<~'EOS'],
+            _
+        EOS
+            *
+        EOS
+        [false, <<~'EOS', <<~'EOS'],
+            *
+        EOS
+            **
+        EOS
+        [false, <<~'EOS', <<~'EOS'],
+            *
+        EOS
+            *
+            *
+        EOS
+        [true, <<~'EOS', <<~'EOS'],
+            **
+            **
+        EOS
+            **
+            **
+        EOS
+        [true, <<~'EOS', <<~'EOS'],
+            __
+            __
+        EOS
+            __
+            __
+        EOS
+        [false, <<~'EOS', <<~'EOS'],
+            **
+            *_
+        EOS
+            **
+            **
+        EOS
+    ].each.with_index do |(expected, text1, text2), index|
+        define_method("test_equals_#{index + 1}") do
+            assert_equal(expected, Field.from_text(text1) == Field.from_text(text2))
+        end
+    end
+
+    def test_clone
+        field1 = Field.from_text('*')
+        field2 = field1.clone
+        field1.touch(Field::TOGGLE_5, 0, 0)
+        assert_not_equal(field1, field2)
+    end
+
+    [
         [1, 1, <<~'EOS'],
             *
         EOS

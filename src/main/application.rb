@@ -23,7 +23,7 @@ class Application
         field = Field.from_file(problem_file_path)
 
         (1..).each do |max_depth|
-            if operations = Solver.new.solve(field, max_depth)
+            if operations = Solver.new.solve(field)
                 raise 'Bug' if !solved?(field, operations)
                 result = operations_to_string(operations)
                 puts result

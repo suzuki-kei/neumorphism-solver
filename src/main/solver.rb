@@ -1,31 +1,29 @@
 
 class Solver
 
-    def solve(field, max_depth, depth=1, operations=[])
-        if field.solved?
-            return operations.dup
-        end
-        if depth > max_depth
-            return nil
-        end
+    def solve(field)
+        operations_queue = []
+        operations_queue.push([])
 
-        best_answer = nil
+        loop do
+            operations = operations_queue.shift
+            return operations if solved?(field, operations)
 
-        Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
-            operations.push([toggle_method, x, y])
-            field.touch(toggle_method, x, y)
-            if field.solved?
-                field.touch(toggle_method, x, y)
-                return operations.dup
+            Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
+                operation = [toggle_method, x, y]
+                operations_queue.push([*operations, operation]) if operations_queue.last != operation
             end
-            if (answer = solve(field, max_depth, depth + 1, operations))
-                best_answer = [answer, best_answer].compact.min_by(&:size)
-            end
-            field.touch(toggle_method, x, y)
-            operations.pop
         end
+    end
 
-        best_answer
+    private
+
+    def solved?(field, operations)
+        field = field.clone
+        operations.each do |operation|
+            field.touch(*operation)
+        end
+        field.solved?
     end
 
 end

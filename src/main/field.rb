@@ -56,6 +56,10 @@ class Field
         @rows.map(&:join).join("\n")
     end
 
+    def clone
+        self.class.new(@rows.map(&:clone))
+    end
+
     def width
         @rows[0].size
     end
