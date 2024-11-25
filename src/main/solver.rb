@@ -39,7 +39,11 @@ class Solver
             end
         end
 
-        nil
+        if field.solved?
+            operations
+        else
+            nil
+        end
     end
 
 end

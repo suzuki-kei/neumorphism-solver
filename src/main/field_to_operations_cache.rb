@@ -14,7 +14,6 @@ class FieldToOperationsCache
         @generate_arguments[arguments] = true
         field = Field.from_size(width, height, Field::CELL_OFF)
         generate_recursively(field, [], max_depth)
-        @cache[field] = []
     end
 
     def [](field)
