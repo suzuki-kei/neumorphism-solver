@@ -28,6 +28,7 @@ class FieldToOperationsCache
 
     def generate_recursively(field, operations, max_depth, depth=1)
         return if depth > max_depth
+        return if @cache.key?(field)
 
         Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
             field.touch(toggle_method, x, y)
