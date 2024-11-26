@@ -30,16 +30,18 @@ class Solver
     private
 
     def execute(field, operations)
+        executed_field = field.clone
+
         operations.each.with_index do |operation, index|
-            field.touch(*operation)
-            if trailing_operations = @field_to_operations_cache[field]
+            executed_field.touch(*operation)
+            if trailing_operations = @field_to_operations_cache[executed_field]
                 solved_operations = operations[0..index] + trailing_operations
                 @field_to_operations_cache[field] = solved_operations
                 return solved_operations
             end
         end
 
-        if field.solved?
+        if executed_field.solved?
             operations
         else
             nil
