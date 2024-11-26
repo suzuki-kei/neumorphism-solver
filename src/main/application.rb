@@ -15,6 +15,10 @@ class Application
 
     private
 
+    def problem_file_path_to_cache_file_path(problem_file_path)
+        CACHE_DIR.join(problem_file_path.basename)
+    end
+
     def solve(problem_file_path)
         puts "==== #{problem_file_path.basename}"
         result = load_cache(problem_file_path)
@@ -33,7 +37,7 @@ class Application
     end
 
     def load_cache(problem_file_path)
-        cache_file_path = CACHE_DIR.join(problem_file_path.basename)
+        cache_file_path = problem_file_path_to_cache_file_path(problem_file_path)
 
         if File.exist?(cache_file_path)
             File.read(cache_file_path)
@@ -44,7 +48,7 @@ class Application
 
     def save_cache(problem_file_path, result)
         FileUtils.makedirs(CACHE_DIR)
-        cache_file_path = CACHE_DIR.join(problem_file_path.basename)
+        cache_file_path = problem_file_path_to_cache_file_path(problem_file_path)
 
         File.open(cache_file_path, 'w') do |file|
             file.puts(result)
