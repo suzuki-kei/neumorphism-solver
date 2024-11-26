@@ -25,16 +25,11 @@ class Application
         end
 
         field = Field.from_file(problem_file_path)
-
-        (1..).each do |max_depth|
-            if operations = @solver.solve(field)
-                raise 'Bug' if !solved?(field, operations)
-                result = operations_to_string(operations)
-                puts result
-                save_cache(problem_file_path, result)
-                return
-            end
-        end
+        operations = @solver.solve(field)
+        raise 'Bug' if !solved?(field, operations)
+        result = operations_to_string(operations)
+        puts result
+        save_cache(problem_file_path, result)
     end
 
     def load_cache(problem_file_path)
