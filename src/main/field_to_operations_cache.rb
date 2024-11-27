@@ -4,16 +4,25 @@ class FieldToOperationsCache
 
     def initialize
         @cache = {}
-        @generate_arguments = {}
     end
 
     def generate(width, height, max_depth)
-        arguments = [width, height, max_depth]
-        return if @generate_arguments.key?(arguments)
-
-        @generate_arguments[arguments] = true
         field = Field.from_size(width, height, Field::CELL_OFF)
-        generate_recursively(field, [], max_depth)
+        operations_queue = []
+        operations_queue.push([])
+
+        until operations_queue.empty?
+            operations = operations_queue.shift
+            executed_field = execute(field.clone, operations)
+            next if @cache.key?(executed_field)
+            @cache[executed_field] = operations.reverse
+
+            if operations.size < max_depth
+                Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
+                    operations_queue.push([[toggle_method, x, y], *operations])
+                end
+            end
+        end
     end
 
     def [](field)
@@ -26,17 +35,11 @@ class FieldToOperationsCache
 
     private
 
-    def generate_recursively(field, operations, max_depth, depth=1)
-        return if depth > max_depth
-        return if @cache.key?(field)
-
-        Field.toggle_methods.product(field.points).each do |toggle_method, (x, y)|
-            field.touch(toggle_method, x, y)
-            operations.push([toggle_method, x, y])
-            generate_recursively(field, operations, max_depth, depth + 1)
-            @cache[field.clone] = [@cache[field], operations.reverse].compact.min_by(&:size)
-            field.touch(toggle_method, x, y)
-            operations.pop
+    def execute(field, operations)
+        field.tap do
+            operations.each do |operation|
+                field.touch(*operation)
+            end
         end
     end
 
