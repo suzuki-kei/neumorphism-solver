@@ -7,7 +7,14 @@ class Solver
     end
 
     def solve(field)
-        @field_to_operations_cache.generate(field.width, field.height, 4)
+        # max_depth=3 の場合に全問題を最速で解決できた.
+        #     max_depth=2 の場合は 5m 以上 (計測打ち切り)
+        #     max_depth=3 の場合は 19s 程度
+        #     max_depth=4 の場合は 35s 程度
+        #     max_depth=5 の場合は 9m 以上 (計測打ち切り)
+        max_depth = 3
+        @field_to_operations_cache.generate(field.width, field.height, max_depth)
+
         operations = @field_to_operations_cache[field]
         return operations unless operations.nil?
 
