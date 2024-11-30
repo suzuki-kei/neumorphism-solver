@@ -1,8 +1,7 @@
-
 class Field
 
-    CELL_ON  = '*'
-    CELL_OFF = '_'
+    CELL_ON  = '*'.freeze
+    CELL_OFF = '_'.freeze
 
     TOGGLE_5 = :toggle_5
     TOGGLE_9 = :toggle_9
